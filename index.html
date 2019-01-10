@@ -2,7 +2,6 @@
 Users can enter multiple integers in TEXTAREA element, separated by any special characters.
 JavaScript will split those integers into two groups of equal size with the total sum being as even as possible.
 Feel free to use any third-party JavaScript plugins.
-Once complete send link or files to recruiting@projectrecapture.com
 This exercise is not intended to take up all of your free time, please limit it to the available time that you have. In this case we value quality over quantity. -->
 
 <!DOCTYPE html>
@@ -22,9 +21,35 @@ This exercise is not intended to take up all of your free time, please limit it 
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script>
-    $('button').click(() => {
-        console.log($('textarea').val());
-    });
+        const splitInTwoGroupsOfEqualSizeAndAlmostEqualSum = (array) => {
+            const arrayDescSorted = array.sort((a,b) => b - a);
+            const subArray1 = [];
+            const subArray2 = [];
+            let sumSubArray1 = 0;
+            let sumSubArray2 = 0;
+
+            for (let index = 0; index < arrayDescSorted.length; index++) {
+                if(sumSubArray1 < sumSubArray2 && subArray1.length <= subArray2.length) {
+                    subArray1.push(arrayDescSorted[index]);
+                    sumSubArray1 += arrayDescSorted[index];
+                } else {
+                    subArray2.push(arrayDescSorted[index]);
+                    sumSubArray2 += arrayDescSorted[index];
+                }
+            }
+            console.log('sumSubArray1:', sumSubArray1, 'sumSubArray2:', sumSubArray2)
+            return [subArray1, subArray2];
+        }
+
+        $('button').click(() => {
+            const textareaInput = $('textarea').val();
+            console.log(textareaInput);
+            const re = /\d{1,}/g;
+            const arrayOfStringNumbers = textareaInput.match(re);
+            const arrayOfNumbers = arrayOfStringNumbers.map( e => Number(e));
+            console.log(arrayOfStringNumbers);
+            console.log(splitInTwoGroupsOfEqualSizeAndAlmostEqualSum(arrayOfNumbers));
+        });
     </script>
 </body>
 </html>
