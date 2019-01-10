@@ -1,0 +1,30 @@
+<!-- Please create a single HTML page with minimum of JS required to do following:
+Users can enter multiple integers in TEXTAREA element, separated by any special characters.
+JavaScript will split those integers into two groups of equal size with the total sum being as even as possible.
+Feel free to use any third-party JavaScript plugins.
+Once complete send link or files to recruiting@projectrecapture.com
+This exercise is not intended to take up all of your free time, please limit it to the available time that you have. In this case we value quality over quantity. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dercilio Fontes - Project:Recapture Inc</title>
+</head>
+<body>
+    <div>
+        <label for="capture">Your list of integers separated by any special characters:</label>
+        <textarea id="capture" name="capture" rows="30" cols="100">
+        </textarea>
+        <button>Split</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+    $('button').click(() => {
+        console.log($('textarea').val());
+    });
+    </script>
+</body>
+</html>
