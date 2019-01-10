@@ -8,19 +8,48 @@ This exercise is not intended to take up all of your free time, please limit it 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dercilio Fontes - Project:Recapture Inc</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <style>
+        .card h2 {
+            color: #AA5042;
+        }
+        #result div {
+            margin: 5%;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <label for="capture">Your list of integers separated by any special characters:</label>
-        <textarea id="capture" name="capture" rows="30" cols="100">
-        </textarea>
-        <button>Split</button>
+    <div class="card">
+        <div class="card-header">
+            <h2>Brief coding challenge - Project:Recapture Inc.<h2>
+            <h4>Candidate: <a href="https://derciliofontes.github.io">Dercilio Fontes</a></h4>
+        </div>
     </div>
+
+    <section class="container">
+        <div class="form-group">
+            <label for="capture"><h2>Your list of integers separated by any special characters:</h2></label>
+            <textarea id="capture" class="form-control" name="capture" rows="20" cols="100">
+            </textarea>
+        </div>
+        <button type="button" class="btn btn-success">Split</button>
+        <div id="result">
+            <div id="group1"></div>
+            <div id="group2"></div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
     <script>
+        // Function for split a array of integer into two groups of equal size with the total sum being as even as possible. 
         const splitInTwoGroupsOfEqualSizeAndAlmostEqualSum = (array) => {
             const arrayDescSorted = array.sort((a,b) => b - a);
             const subArray1 = [];
@@ -28,8 +57,9 @@ This exercise is not intended to take up all of your free time, please limit it 
             let sumSubArray1 = 0;
             let sumSubArray2 = 0;
 
+
             for (let index = 0; index < arrayDescSorted.length; index++) {
-                if(sumSubArray1 < sumSubArray2 && subArray1.length <= subArray2.length) {
+                if(sumSubArray1 <= sumSubArray2 && subArray1.length <= subArray2.length) {
                     subArray1.push(arrayDescSorted[index]);
                     sumSubArray1 += arrayDescSorted[index];
                 } else {
@@ -37,19 +67,37 @@ This exercise is not intended to take up all of your free time, please limit it 
                     sumSubArray2 += arrayDescSorted[index];
                 }
             }
-            console.log('sumSubArray1:', sumSubArray1, 'sumSubArray2:', sumSubArray2)
-            return [subArray1, subArray2];
+            // console.log('sumSubArray1:', sumSubArray1, 'sumSubArray2:', sumSubArray2)
+            // return [subArray1, subArray2];
+            return { 
+                one: { 
+                    array: subArray1, 
+                    sum: sumSubArray1 
+                },
+                two: { 
+                    array: subArray2, 
+                    sum: sumSubArray2 
+                }
+            };
         }
 
         $('button').click(() => {
             const textareaInput = $('textarea').val();
-            console.log(textareaInput);
+            // console.log(textareaInput);
             const re = /\d{1,}/g;
             const arrayOfStringNumbers = textareaInput.match(re);
             const arrayOfNumbers = arrayOfStringNumbers.map( e => Number(e));
-            console.log(arrayOfStringNumbers);
-            console.log(splitInTwoGroupsOfEqualSizeAndAlmostEqualSum(arrayOfNumbers));
+            // console.log(arrayOfStringNumbers);
+            // console.log(splitInTwoGroupsOfEqualSizeAndAlmostEqualSum(arrayOfNumbers));
+            const groups = splitInTwoGroupsOfEqualSizeAndAlmostEqualSum(arrayOfNumbers);
+
+            $('#group1').append('<h1>Group 1</h1>');
+            $('#group1').append(`<p>Elements: ${groups.one.array.join(', ')} =>  Sum: ${groups.one.sum}</p>`);
+
+            $('#group2').append('<h1>Group 2</h1>');
+            $('#group2').append(`<p>Elements: ${groups.two.array.join(', ')} =>  Sum: ${groups.two.sum}</p>`);
         });
     </script>
+
 </body>
 </html>
