@@ -49,53 +49,94 @@ This exercise is not intended to take up all of your free time, please limit it 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
     <script>
-        // Function for split a array of integer into two groups of equal size with the total sum being as even as possible. 
-        const splitInTwoGroupsOfEqualSizeAndAlmostEqualSum = (array) => {
-            const arrayDescSorted = array.sort((a,b) => b - a);
-            const subArray1 = [];
-            const subArray2 = [];
-            let sumSubArray1 = 0;
-            let sumSubArray2 = 0;
 
+        // Auxiliary function for trying to achive the closest total sum between two subarrays.
+        const improvingToAlmostSameSum = (a1, a2) => {
+            let sumA1 = a1.reduce((acc, x) => acc += x, 0);
+            let sumA2 = a2.reduce((acc, x) => acc += x, 0);
+            let diffSumA1SumA2 = sumA1 - sumA2;
 
-            for (let index = 0; index < arrayDescSorted.length; index++) {
-                if(sumSubArray1 <= sumSubArray2 && subArray1.length <= subArray2.length) {
-                    subArray1.push(arrayDescSorted[index]);
-                    sumSubArray1 += arrayDescSorted[index];
-                } else {
-                    subArray2.push(arrayDescSorted[index]);
-                    sumSubArray2 += arrayDescSorted[index];
+            // Nested loops for check possible elements for changing between subarrays reducing sums differences 
+                // Subarray1 starts from the second element because the first is the biggest element of all
+            for (let iA1 = 1; iA1 < a1.length; iA1++) {
+                for (let iA2 = 0; iA2 < a2.length; iA2++) {
+
+                    // If the difference of elements is positive and less than the double(1) of the difference of subarrays sums, changes the elements between subarrays
+                        // 1. Double because removes from one, adds into another
+                        // Obs: Assuming arbitrarily a difference of plus 1 as good parameter. This can have some exceptions not corvered 
+                    if(a1[iA1] - a2[iA2] > 0 && Math.abs((a1[iA1] - a2[iA2]) * 2) <= diffSumA1SumA2 + 1) {
+
+                            // Reduces the difference of subarrays sums
+                            diffSumA1SumA2 -= (a1[iA1] - a2[iA2]) * 2; 
+
+                            // Changes positions 
+                            const temp = a1[iA1];
+                            a1[iA1] = a2[iA2];
+                            a2[iA2] = temp;
+                    } 
                 }
             }
-            // console.log('sumSubArray1:', sumSubArray1, 'sumSubArray2:', sumSubArray2)
-            // return [subArray1, subArray2];
-            return { 
-                one: { 
-                    array: subArray1, 
-                    sum: sumSubArray1 
-                },
-                two: { 
-                    array: subArray2, 
-                    sum: sumSubArray2 
+
+            // console.log(`subArray1: ${a1} => sumA1: ${a1.reduce((acc, x) => acc += x, 0)} / subArray2: ${a2} => sumA2: ${a2.reduce((acc, x) => acc += x, 0)}`);
+            return [a1, a2];
+        }
+
+        // Main function for split a array of integer into two groups of equal size with the total sum being as even as possible. 
+        const splitInTwoGroupsOfEqualSizeAndAlmostEqualSum = (array) => {
+            const subArray1 = [];
+            const subArray2 = [];
+
+            // If empty array
+            if(array.length === 0) {
+                // console.log(`subArray1: ${subArray1} => sumA1: ${subArray1.reduce((acc, x) => acc += x, 0)} / subArray2: ${subArray2} => sumA2: ${subArray1.reduce((acc, x) => acc += x, 0)}`);
+                return [subArray1, subArray2];
+            }
+
+            // If array with one element
+            if(array.length === 1) {
+                subArray1[0] = array[0];
+                // console.log(`subArray1: ${subArray1} => sumA1: ${subArray1.reduce((acc, x) => acc += x, 0)} / subArray2: ${subArray2} => sumA2: ${subArray2.reduce((acc, x) => acc += x, 0)}`);
+                return [subArray1, subArray2];
+            }
+
+            /* From here, arrays with two or more elements */
+
+            // Descending sort of the array 
+            const arrayDescSorted = array.sort((a, b) => b - a);
+
+            // Distributes elements between subarrays, alternating order of the two subarrys each time to balance sums
+            let turnOfSubArray1First = true;
+            for (let i = 0; i < arrayDescSorted.length; ) {
+                if(turnOfSubArray1First) {
+                    subArray1.push(arrayDescSorted[i++]);
+                    if(i < arrayDescSorted.length) {
+                        subArray2.push(arrayDescSorted[i++]);
+                    }
+                    turnOfSubArray1First = false;
+                } else {
+                    subArray2.push(arrayDescSorted[i++]);
+                    if(i < arrayDescSorted.length) {
+                        subArray1.push(arrayDescSorted[i++]);
+                    }
+                    turnOfSubArray1First = true;
                 }
-            };
+            }
+
+            return improvingToAlmostSameSum(subArray1, subArray2);
         }
 
         $('button').click(() => {
             const textareaInput = $('textarea').val();
-            // console.log(textareaInput);
             const re = /\d{1,}/g;
             const arrayOfStringNumbers = textareaInput.match(re);
             const arrayOfNumbers = arrayOfStringNumbers.map( e => Number(e));
-            // console.log(arrayOfStringNumbers);
-            // console.log(splitInTwoGroupsOfEqualSizeAndAlmostEqualSum(arrayOfNumbers));
             const groups = splitInTwoGroupsOfEqualSizeAndAlmostEqualSum(arrayOfNumbers);
 
-            $('#group1').append('<h1>Group 1</h1>');
-            $('#group1').append(`<p>Elements: ${groups.one.array.join(', ')} =>  Sum: ${groups.one.sum}</p>`);
+            $('#group1').append('<h2>Group 1</h2>');
+            $('#group1').append(`<p>Elements: ${groups[0].join(', ')} =>  Sum: ${groups[0].reduce((acc, x) => acc += x, 0)}</p>`);
 
-            $('#group2').append('<h1>Group 2</h1>');
-            $('#group2').append(`<p>Elements: ${groups.two.array.join(', ')} =>  Sum: ${groups.two.sum}</p>`);
+            $('#group2').append('<h2>Group 2</h2>');
+            $('#group2').append(`<p>Elements: ${groups[1].join(', ')} =>  Sum: ${groups[1].reduce((acc, x) => acc += x, 0)}</p>`);
         });
     </script>
 
