@@ -128,7 +128,7 @@ This exercise is not intended to take up all of your free time, please limit it 
         $('button').click(() => {
             const textareaInput = $('textarea').val();
             const re = /\d{1,}/g;
-            const arrayOfStringNumbers = textareaInput.match(re);
+            const arrayOfStringNumbers = textareaInput.match(re) || [''];
             const arrayOfNumbers = arrayOfStringNumbers.map( e => Number(e));
             const groups = splitInTwoGroupsOfEqualSizeAndAlmostEqualSum(arrayOfNumbers);
 
