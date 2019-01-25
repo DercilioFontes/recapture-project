@@ -39,7 +39,7 @@ This exercise is not intended to take up all of your free time, please limit it 
             </textarea>
         </div>
         <button type="button" class="btn btn-success">Split</button>
-        <div id="result">
+        <div>
             <div id="group1"></div>
             <div id="group2"></div>
         </div>
@@ -51,7 +51,7 @@ This exercise is not intended to take up all of your free time, please limit it 
     <script>
 
         // Auxiliary function for trying to achive the closest total sum between two subarrays.
-        const improvingToAlmostSameSum = (a1, a2) => {
+        const improveToAlmostSameSum = (a1, a2) => {
             let sumA1 = a1.reduce((acc, x) => acc += x, 0);
             let sumA2 = a2.reduce((acc, x) => acc += x, 0);
             let diffSumA1SumA2 = sumA1 - sumA2;
@@ -104,7 +104,7 @@ This exercise is not intended to take up all of your free time, please limit it 
             // Descending sort of the array 
             const arrayDescSorted = array.sort((a, b) => b - a);
 
-            // Distributes elements between subarrays, alternating order of the two subarrys each time to balance sums
+            // Distribute elements between subarrays, alternating order of the two subarrys each time to balance sums
             let turnOfSubArray1First = true;
             for (let i = 0; i < arrayDescSorted.length; ) {
                 if(turnOfSubArray1First) {
@@ -122,21 +122,26 @@ This exercise is not intended to take up all of your free time, please limit it 
                 }
             }
 
-            return improvingToAlmostSameSum(subArray1, subArray2);
+            return improveToAlmostSameSum(subArray1, subArray2);
         }
 
         $('button').click(() => {
+
+            // Remove previous result
+            $('#group1').children().remove();
+            $('#group2').children().remove();
+
             const textareaInput = $('textarea').val();
-            const re = /\d{1,}/g;
+            const re = /-?\d{1,}/g;
             const arrayOfStringNumbers = textareaInput.match(re) || [''];
             const arrayOfNumbers = arrayOfStringNumbers.map( e => Number(e));
             const groups = splitInTwoGroupsOfEqualSizeAndAlmostEqualSum(arrayOfNumbers);
 
             $('#group1').append('<h2>Group 1</h2>');
-            $('#group1').append(`<p>Elements: ${groups[0].join(', ')} =>  Sum: ${groups[0].reduce((acc, x) => acc += x, 0)}</p>`);
+            $('#group1').append(`<p>Elements: ${groups[0].join(', ')} <br>=>  Sum: ${groups[0].reduce((acc, x) => acc += x, 0)}</p>`);
 
             $('#group2').append('<h2>Group 2</h2>');
-            $('#group2').append(`<p>Elements: ${groups[1].join(', ')} =>  Sum: ${groups[1].reduce((acc, x) => acc += x, 0)}</p>`);
+            $('#group2').append(`<p>Elements: ${groups[1].join(', ')} <br>=>  Sum: ${groups[1].reduce((acc, x) => acc += x, 0)}</p>`);
         });
     </script>
 
